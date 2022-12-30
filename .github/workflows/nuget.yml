@@ -15,10 +15,13 @@ jobs:
     - name: 'Checkout'
       uses:  actions/Checkout@v2
 
+    - name: Add nuget.org as nuget package source
+      run: dotnet nuget add source https://api.nuget.org/v3/index.json --name nuget.org
+    
     - name: 'Install dotnet'
       uses: actions/setup-dotnet@v1
       with:
-       dotnet-version: '3.1.x'
+        dotnet-version: '3.1.x'
 
     - name: 'Restore package'
       run: dotnet restore ${{ env.PROJECT_PATH }}
