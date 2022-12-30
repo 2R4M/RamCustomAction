@@ -2,6 +2,7 @@
 using Microsoft.Bot.Builder.Dialogs.Declarative;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RamCustomAction.Clients;
 
 namespace RamCustomAction
 {

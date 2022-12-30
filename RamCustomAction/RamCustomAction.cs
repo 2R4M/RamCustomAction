@@ -1,7 +1,16 @@
 ﻿using AdaptiveExpressions.Properties;
+using Azure.Identity;
+using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Graph;
+using Microsoft.Identity.Client;
 using Newtonsoft.Json;
+using RamCustomAction.Clients;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,30 +28,30 @@ namespace RamCustomAction
         [JsonProperty("$Kind")]
         public const string Kind = "RamCustomAction";
 
-        [JsonProperty("token")]
-        public StringExpression Token { get; set; }
+        [JsonProperty("fromId")]
+        public StringExpression FromId { get; set; }
 
-        [JsonProperty("username")]
-        public BoolExpression Username { get; set; }
-
-        [JsonProperty("resultProperty")]
-        public StringExpression ResultProperty { get; set; }
+        [JsonProperty("trackUserName")]
+        public BoolExpression TrackUserName { get; set; } = false;
 
         public override async Task<DialogTurnResult> BeginDialogAsync(DialogContext dc, object options = null,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            var token = Token.GetValue(dc.State);
+            var fromId = FromId.GetValue(dc.State);
+            var graphClient = new GraphClient();
+            var me = await graphClient.GetMeAsync(fromId);
 
-            var result = token;
+            var properties = new Dictionary<string, string>();
 
-            if (ResultProperty != null)
+            var trackUsername = TrackUserName.GetValue(dc);
+            if(trackUsername && !string.IsNullOrWhiteSpace(me.DisplayName))
             {
-                dc.State.SetValue(this.ResultProperty.GetValue(dc.State), result);
+                properties.Add(TelemetryConstants.FromNameProperty, me.DisplayName);
             }
 
-            await dc.Context.SendActivityAsync($"response : {result}");
+            TelemetryClient.TrackEvent(TelemetryLoggerConstants.BotMsgSendEvent, properties);
 
-            return await dc.EndDialogAsync(result: result, cancellationToken: cancellationToken);
+            return await dc.EndDialogAsync(result: me, cancellationToken: cancellationToken);
         }
     }
 }
