@@ -14,9 +14,6 @@ jobs:
     steps:
     - name: 'Checkout'
       uses:  actions/Checkout@v2
-
-    - name: Add nuget.org as nuget package source
-      run: dotnet nuget add source https://api.nuget.org/v3/index.json --name nuget.org
     
     - name: 'Install dotnet'
       uses: actions/setup-dotnet@v1
