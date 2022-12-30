@@ -15,8 +15,8 @@ jobs:
     - name: 'Checkout'
       uses:  actions/Checkout@v2
 
-    - name: 'Add NuGet source'
-      run: dotnet nuget add source --username 2R4M --password ${{ secrets.PAT }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/RamSDK998/index.json"
+    #- name: 'Add NuGet source'
+    #  run: dotnet nuget add source --username 2R4M --password ${{ secrets.PAT }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/RamSDK998/index.json"
     
     - name: 'Install dotnet'
       uses: actions/setup-dotnet@v1
