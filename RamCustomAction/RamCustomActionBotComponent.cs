@@ -11,7 +11,7 @@ namespace RamCustomAction
         public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<DeclarativeType>(sp =>
-                new DeclarativeType<RamCustomAction>(RamCustomAction.Kind));
+                new DeclarativeType<RamCustomAction>(RamCustomAction.Kind)); 
         }
     }
 }
